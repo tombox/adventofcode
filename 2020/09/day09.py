@@ -17,15 +17,15 @@ print "Part 1 answer: ",result
 
 def part2(input, target):
     size = len(input)
-    for n in range(0,size):
-        x = s = 0
-        while s < target and x < size-x:
-            s += input[n+x]
-            x += 1
-        if s == target:
-            r = input[n:n+x]
-            r.sort()
-            return  r[0]+r[-1]
+    for pos in range(0,size):
+        length = sum = 0
+        while sum < target and length < size-length:
+            sum += input[pos+length]
+            length += 1
+        if sum == target:
+            section = input[pos:pos+length]
+            section.sort()
+            return  section[0]+section[-1]
     return 0
 
 print "Part 2 answer: ", part2(lines, result)
