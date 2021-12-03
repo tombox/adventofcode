@@ -6,34 +6,37 @@ def load_data(filename: str) -> list:
     " Given txt file consisting of a string on a new line, returns as list "
     return [x.decode('UTF-8') for x in open(filename, "rb").read().splitlines()]
 
-def popular_bit_is_ones(data: list,pos: int) -> bool:
-    " Find if 1 is more popular than 0 at position pos in each line item string "
-    count = sum(item[pos] == '1' for item in data)
+def check_bits(data: list,pos: int, digit: str, greater_equal: bool=True) -> bool:
+    """ Find if count of 1s is greter-equal  or less-equal
+    of char at position pos in each line item string """
+
+    count = sum(item[pos] == digit for item in data)
+
+    if not greater_equal:
+        return count <= len(data)/2
+
     return count >= len(data)/2
 
-def popular_bit_is_zeros(data: list,pos: int) -> bool:
-    " Find if 0 is more popular than 1 at position pos in each line item string "
-    count = sum(item[pos] == '0' for item in data)
-    return count <= len(data)/2
 
 def part1(file: str) -> int:
-    " Day 02 puzzle part 1"
+    " Day 03 puzzle part 1"
     lines = load_data(file)
     epilson_str = gamma_str = ''
 
     for pos in range(len(lines[0])):
-        gamma_str += '0' if popular_bit_is_ones(lines, pos) else '1'
-        epilson_str += '1' if popular_bit_is_ones(lines, pos) else '0'
+        valid = check_bits(lines, pos, '1')
+        gamma_str += '0' if valid else '1'
+        epilson_str += '1' if valid  else '0'
 
     return(int(gamma_str,2) * int(epilson_str,2))
 
 def part2(file: str) -> int:
-    " Day 02 puzzle part 2"
+    " Day 03 puzzle part 2"
 
     data = lines = load_data(file)
     pos = 0
     while len(data) > 1:
-        valid = popular_bit_is_ones(data,pos)
+        valid = check_bits(data,pos, '1')
         item_filter = lambda x: (x[pos] == '1' and valid) or (x[pos] == '0' and not valid)
         data = list(filter(item_filter,data))
         pos+=1
@@ -43,7 +46,7 @@ def part2(file: str) -> int:
     data = lines
     pos = 0
     while len(data) > 1:
-        valid = popular_bit_is_zeros(data,pos)
+        valid = check_bits(data,pos, '0', greater_equal=False)
         item_filter = lambda x: (x[pos] == '0' and valid) or (x[pos] == '1' and not valid)
         data = list(filter(item_filter,data))
         pos+=1
