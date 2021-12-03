@@ -7,8 +7,8 @@ def load_data(filename: str) -> list:
     return [x.decode('UTF-8') for x in open(filename, "rb").read().splitlines()]
 
 def check_bits(data: list,pos: int, digit: str, greater_equal: bool=True) -> bool:
-    """ Find if count of 1s is greter-equal  or less-equal
-    of char at position pos in each line item string """
+    """ Find if occurance of given digit is greter-equal or less-equal
+    to majoirty, for char at position pos in each line item string """
 
     count = sum(item[pos] == digit for item in data)
 
