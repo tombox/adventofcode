@@ -14,6 +14,7 @@ def load_data(filename: str) -> tuple:
         board = []
         for row in range(5):
             board += [(int(x)) for x in lines[board_id*6+row+2].split()]
+        # Load board into a numpy array for simpler processing
         np_board = np.array(board)
         np_board.resize(5,5)
         boards.append(np_board)
@@ -22,12 +23,15 @@ def load_data(filename: str) -> tuple:
 
 
 def check_wins(board: NDArray[Int]) -> int:
+    " Find if any columns or rows's values are all matched (row/col sum==-5)"
     return -5 in board.sum(axis=0) or -5 in board.sum(axis=1)
 
 def mark_board(board: NDArray[Int], draw: int) -> None:
+    " Mark all board valus as -1 if they match the draw number "
     board[board == draw] = -1
 
 def score_board(board: NDArray[Int]) -> int:
+    " Sum all values that have not been matched to drawn numbers "
     board[board <0] = 0
     return board.sum()
 
@@ -38,11 +42,8 @@ def part1(file: str) -> int:
     for draw in draws:
         for board in boards:
             mark_board(board, draw)
-
-        for board in boards:
             if check_wins(board):
                 return score_board(board)*draw
-    
     return 0
 
 
@@ -53,8 +54,6 @@ def part2(file: str) -> int:
     for draw in draws:
         for board in boards:
             mark_board(board, draw)
-
-        for board in boards:
             if check_wins(board):
                 score = score_board(board)*draw
                 board[board >=-1] = -2
