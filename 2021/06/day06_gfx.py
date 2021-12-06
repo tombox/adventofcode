@@ -14,17 +14,21 @@ def load_data(filename: str) -> tuple:
     items = [int(x) for x in open(filename, "r").read().split(',')]
     return items
 
-def add_image(image, births, col, max_val):
+def generate_dots_image(image, births, col):
+    " Generate an image with given amount of random green dots"
+
+    width, height = image.size
     draw = ImageDraw.Draw(image)
+    draw.rectangle((0, 0, width, height), fill=BLACK)
     
-    draw.rectangle((0, 0, max_val, max_val), fill=BLACK)
     for n in range(births):
-        x,y = randint(0,max_val),randint(0,max_val)
+        x,y = randint(0,width),randint(0,height)
         draw.line([(x,y),(x,y-1)], fill=col)
 
     return image
 
 def pilImageToSurface(pilImage):
+    " Convert image from PIL image to Pygame Surface type "
     return pygame.image.fromstring(
         pilImage.tobytes(), pilImage.size, pilImage.mode).convert()
 
@@ -38,8 +42,7 @@ def pygame_test():
     births = list(repeat(0, days+9))
     max_val = 1000
     black_image = Image.new('RGB', (max_val, max_val), BLACK)
-    fish_image = Image.new('RGB', (max_val, max_val), BLACK)
-    new_layer = Image.new('RGB', (max_val, max_val), BLACK)
+    dots_image = Image.new('RGB', (max_val, max_val), BLACK)
 
     pygame.init()
     gameDisplay = pygame.display.set_mode((max_val,max_val))
@@ -74,12 +77,12 @@ def pygame_test():
         base_image = ImageChops.add(base_image, base_image_shifted)
 
         # generate today's births as green dots
-        add_image(new_layer, births[day], GREEN, max_val)
+        dots_image = generate_dots_image(dots_image, births[day], GREEN)
 
         # add today's dots on
-        base_image = ImageChops.add(base_image, new_layer)
+        base_image = ImageChops.add(base_image, dots_image)
 
-        # add a two-level blur on top
+        # add a two-level blur on top annd give it a bit of a random flicker
         blurred2 = base_image.filter(ImageFilter.GaussianBlur(20+randint(-2,2)))
         blurred1 = base_image.filter(ImageFilter.GaussianBlur(5))
         f_image = ImageChops.add(ImageChops.add(base_image,blurred1,0.5+random()*0.1),blurred2,0.6+random()*0.05)
