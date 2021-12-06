@@ -11,8 +11,8 @@ def load_data(filename: str) -> tuple:
 def part1(file: str) -> int:
     " Day 06 puzzle part 1"
     items  = load_data(file)  
-    days = 0
-    for day in range(80):
+    days=80
+    for day in range(days):
         for n in range(len(items)):
             items[n] -= 1
             if items[n] == -1:
@@ -23,23 +23,21 @@ def part1(file: str) -> int:
 def part2(file: str) -> int:
     " Day 06 puzzle part 2"
     items  = load_data(file)  
-
+    days = 256
     day = 0
-    max_days = 256+9
     births = []
-    births = list(repeat(0, max_days))
+    births = list(repeat(0, days+9))
 
     for item in items: 
         births[item] += 1
 
     fish = len(items)
-    while True:
+    for day in range(days):
         fish += births[day]
         births[day+9] += births[day] # set new fish to be born
         births[day+7] += births[day] # set today's parents to respawn again
         day += 1
-        if day == 256: 
-            return fish
+    return fish
 
 def test_example_part1():
     " Pytest for function example data part1() "
