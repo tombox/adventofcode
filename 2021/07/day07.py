@@ -1,7 +1,6 @@
 """
-https://adventofcode.com/2021/day/6
+https://adventofcode.com/2021/day/7
 """
-from itertools import repeat
 import math
 
 def load_data(filename: str) -> tuple:
@@ -21,11 +20,11 @@ def part1(file: str) -> int:
 
     return lowest_cost
 
-def part1_minified(file):
+def part1(file):
     items = [int(x) for x in open(file, "r").read().split(',')]
     return min([sum(abs(x-p) for x in items) for p in range(max(items))])
 
-def part2_minified(file):
+def part2(file):
     items = [int(x) for x in open(file, "r").read().split(',')]
     return min([sum(int((abs(x-p)/2)*(abs(x-p)+1)) for x in items) for p in range(max(items))])
 
